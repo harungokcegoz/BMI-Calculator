@@ -1,14 +1,11 @@
-//
-//  ViewController.swift
-//  BMI Calculator
-//
-//  Created by Angela Yu on 21/08/2019.
-//  Copyright © 2019 Angela Yu. All rights reserved.
-//
+
 
 import UIKit
 
 class ViewController: UIViewController {
+    
+    var calculatorBrain = CalculatorBrain()
+    
     @IBOutlet weak var heightLabel: UILabel!
     @IBOutlet weak var weightLabel: UILabel!
     @IBOutlet weak var heightSlider: UISlider!
@@ -18,7 +15,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
+    
     @IBAction func heightSliderChanged(_ sender: UISlider) {
         let height = String(format: "%.2f", sender.value)
         heightLabel.text = "\(height)m"
@@ -29,7 +26,21 @@ class ViewController: UIViewController {
         weightLabel.text = "\(weight)kg"
     }
     @IBAction func calculatePressed(_ sender: UIButton) {
-        let bmi = weightSlider.value / (heightSlider.value * heightSlider.value)
+        
+        calculatorBrain.calculateBMI(height: heightSlider.value, weight: weightSlider.value)
+        
+        
+        performSegue(withIdentifier: "goToResult", sender: self)
+        
+        
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToResult" {
+            let destVC = segue.destination as! ResultsViewController
+            destVC.bmiValue = calculatorBrain.getBMIValue()
+            
+        }
     }
 }
 
